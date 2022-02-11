@@ -15,7 +15,8 @@
         </el-form-item>
       </el-form>
       <el-button size="mini"
-                 @click="login">登录</el-button>
+                 @click="login"
+                 type="primary">登录</el-button>
     </div>
   </div>
 </template>
@@ -30,7 +31,9 @@ export default {
   },
   methods: {
     login() {
-
+      this.$router.push({
+        path: '/home'
+      })
     }
   }
 }
