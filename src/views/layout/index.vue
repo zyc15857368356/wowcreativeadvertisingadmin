@@ -61,7 +61,7 @@
                 <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                   <el-submenu index="1">
                     <template slot="title">admin</template>
-                    <el-menu-item index="1-1">退出</el-menu-item>
+                    <el-menu-item index="1-1">退出登录</el-menu-item>
                   </el-submenu>
                 </el-menu>
               </div>
@@ -70,14 +70,11 @@
 
           </div>
           <div class="content">
-            内容
+            <main-navbar></main-navbar>
           </div>
         </el-col>
       </el-row>
-<!--      <div class="navhead">-->
 
-<!--&lt;!&ndash;        <main-nav-bar></main-nav-bar>&ndash;&gt;-->
-<!--      </div>-->
       <div>
         <div>
 
@@ -91,11 +88,11 @@
   </div>
 </template>
 <script>
-// import MainNavbar from "../home/mainNavbar";
+import MainNavbar from "../home/mainNavbar";
 export default {
-  // component:{
-  //   MainNavbar
-  // },
+  components:{
+    MainNavbar
+  },
   data() {
     return {
       circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
@@ -133,6 +130,7 @@ export default {
   height: 61px;
   float: right;
   background-color:#fff;
+  border-bottom: 1px solid rgb(246, 246, 246);
 }
 .user-wrapper{
   float: right;
@@ -142,7 +140,7 @@ export default {
 
 }
 .content{
-  background-color: lightblue;
+
   height: 100vh;
 }
 </style>
