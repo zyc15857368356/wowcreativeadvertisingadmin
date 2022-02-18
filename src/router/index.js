@@ -12,10 +12,10 @@ const routes = [{
   {
     path: '/',
     component: layout,
-    redirect: '/home',
+    redirect: '/login',
     children: [{
       path: 'home',
-      component: () => import('../views/home/index.vue')
+      component: () => import('../views/home/index.vue'),
     }]
   }
 ]
@@ -23,5 +23,6 @@ const routes = [{
 const router = new VueRouter({
   routes
 })
+
 
 export default router
