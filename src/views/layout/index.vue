@@ -2,7 +2,9 @@
   <div>
     <div>
       <div class="navhead">
-
+        <div>
+          
+        </div>
       </div>
       <div>
         <div>
@@ -75,6 +77,6 @@ export default {
 .navhead {
   width: 100%;
   height: 60px;
-  border: 1px solid #f00;
+  background: ;
 }
 </style>
