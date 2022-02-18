@@ -61,6 +61,7 @@
                      action="https://jsonplaceholder.typicode.com/posts/"
                      :on-remove="videoRemove"
                      auto-upload
+                     :on-success="file"
                      :before-remove="beforeRemove"
                      :file-list="fileList">
             <el-button size="small"
@@ -171,11 +172,11 @@ export default {
     },
     getUsers() {
       this.loading = true
-      // this.$http('/api/users').then((res) => {
-      //   this.users = res.data
-      // }).catch((err) => {
-      //   console.error(err)
-      // })
+      this.http.get('/Admin/Home/GetUserInformation', { pageIndex: 1, pageSize: 20, search: '' }).then(res => {
+        console.log(res)
+      }).catch(res => {
+        console.log(res)
+      })
     },
     handleEdit(index, row) {
       this.dialogTitle = '编辑'

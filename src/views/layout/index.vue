@@ -27,7 +27,6 @@
                 </el-menu>
               </div>
             </div>
-
           </div>
         </el-col>
       </el-row>
@@ -58,16 +57,7 @@
           </div>
         </el-col>
       </el-row>
-      <div>
-        <div>
-
-        </div>
-        <div>
-
-        </div>
-      </div>
     </div>
-
   </div>
 </template>
 <script>
