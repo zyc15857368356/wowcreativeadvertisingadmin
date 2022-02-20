@@ -4,19 +4,21 @@
     <div class="loginBox">
       <el-form :label-width="labelWidth">
         <el-form-item label="用户名">
-          <el-input v-model="userName"
-                    style="width: 200px;"
-                    size="mini"></el-input>
+          <el-input
+            v-model="userName"
+            style="width: 200px"
+            size="mini"
+          ></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="passWord"
-                    style="width: 200px;"
-                    size="mini"></el-input>
+          <el-input
+            v-model="passWord"
+            style="width: 200px"
+            size="mini"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <el-button size="mini"
-                 @click="login"
-                 type="primary">登录</el-button>
+      <el-button size="mini" @click="login" type="primary">登录</el-button>
     </div>
   </div>
 </template>
@@ -24,19 +26,41 @@
 export default {
   data() {
     return {
-      userName: '',
-      passWord: '',
-      labelWidth: '80px'
-    }
+      userName: "",
+      passWord: "",
+      labelWidth: "80px",
+    };
   },
   methods: {
     login() {
-      this.$router.push({
-        path: '/home'
-      })
-    }
-  }
-}
+      if (this.userName && this.passWord) {
+        this.http
+          .post("/Auth/Login", {
+            userName: this.userName,
+            passWord: this.passWord,
+          })
+          .then((res) => {
+            if (res.status) {
+              this.$router.push({
+                path: "/home",
+              });
+            }
+          })
+          .catch((res) => {
+            this.$message({
+              message: res.msg,
+              type: "error",
+            });
+          });
+      } else {
+        this.$message({
+          message: "用户名或密码不能为空",
+          type: "warning",
+        });
+      }
+    },
+  },
+};
 </script>
 <style scoped>
 html {
