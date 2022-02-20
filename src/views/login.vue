@@ -35,11 +35,17 @@ export default {
     login() {
       if (this.userName && this.passWord) {
         this.http
-          .post("/Auth/Login", {
-            userName: this.userName,
-            passWord: this.passWord,
-          })
+          .post(
+            "/Auth/Login?username=" +
+              this.userName +
+              "&password=" +
+              this.passWord
+          )
           .then((res) => {
+            let MemberId = res.data.Data.MemberId;
+            let Role = res.data.Data.Role === "管理员" ? 1 : 0;
+            localStorage.setItem("MemberId", MemberId);
+            localStorage.setItem("Role", Role);
             if (res.status) {
               this.$router.push({
                 path: "/home",

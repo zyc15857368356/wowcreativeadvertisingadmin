@@ -7,6 +7,7 @@ import http from '@/api/http'
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+Vue.prototype.$store = store
 Vue.prototype.http = http
 new Vue({
   router,

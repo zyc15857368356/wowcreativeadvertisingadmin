@@ -5,24 +5,26 @@
         <el-col :span="24">
           <div class="navhead navbackground">
             <div class="user-wrapper">
-              <div class="demo-basic--circle"
-                   style=" display: table;">
-                <div class="block"
-                     style="display: table-cell;vertical-align:middle">
-                  <el-avatar :size="40"
-                             :src="circleUrl"></el-avatar>
+              <div class="demo-basic--circle" style="display: table">
+                <div
+                  class="block"
+                  style="display: table-cell; vertical-align: middle"
+                >
+                  <el-avatar :size="40" :src="circleUrl"></el-avatar>
                 </div>
               </div>
               <div class="user-main">
-                <el-menu :default-active="activeIndex"
-                         class="el-menu-demo"
-                         mode="horizontal"
-                         @select="handleSelect">
+                <el-menu
+                  :default-active="activeIndex"
+                  class="el-menu-demo"
+                  mode="horizontal"
+                  @select="handleSelect"
+                >
                   <el-submenu index="1">
-                    <template slot="title"
-                              style="color:  #fff">admin</template>
-                    <el-menu-item index="1-1"
-                                  @click="outLogin">退出登录</el-menu-item>
+                    <template slot="title" style="color: #fff">admin</template>
+                    <el-menu-item index="1-1" @click="outLogin"
+                      >退出登录</el-menu-item
+                    >
                   </el-submenu>
                 </el-menu>
               </div>
@@ -34,13 +36,15 @@
         <el-col :span="3">
           <div class="sidebar">
             <div class="main-side">
-              <el-menu default-active="1"
-                       class="el-menu-vertical-demo"
-                       @open="handleOpen"
-                       @close="handleClose"
-                       background-color="#409EFF"
-                       text-color="#fff"
-                       active-text-color="#ffd04b">
+              <el-menu
+                default-active="1"
+                class="el-menu-vertical-demo"
+                @open="handleOpen"
+                @close="handleClose"
+                background-color="#409EFF"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+              >
                 <el-menu-item index="1">
                   <i class="el-icon-menu"></i>
                   <span slot="title">首页</span>
@@ -51,7 +55,7 @@
         </el-col>
         <el-col :span="21">
           <div class="content">
-            <div style="background: #fff;padding: 20px">
+            <div style="background: #fff; padding: 20px">
               <router-view></router-view>
             </div>
           </div>
@@ -62,20 +66,21 @@
 </template>
 <script>
 export default {
-  components: {
-  },
+  components: {},
   data() {
     return {
-      circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      activeIndex: '1',
-      activeIndex2: '1'
-    }
+      circleUrl:
+        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+      activeIndex: "1",
+      activeIndex2: "1",
+    };
   },
   methods: {
     outLogin() {
+      localStorage.clear();
       this.$router.push({
-        path: 'login'
-      })
+        path: "login",
+      });
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
@@ -87,10 +92,10 @@ export default {
       console.log(key, keyPath);
     },
     menuClick() {
-      alert(1111)
-    }
-  }
-}
+      alert(1111);
+    },
+  },
+};
 </script>
 <style scoped>
 .sidebar {

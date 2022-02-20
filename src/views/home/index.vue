@@ -10,9 +10,15 @@
             @click="handleAdd"
             >新增</el-button
           >
-          <div>
-            <el-input v-model="search" size="small"></el-input>
-            <el-button size="small" @click="getData">搜索</el-button>
+          <div style="display: flex">
+            <el-input
+              v-model="search"
+              size="small"
+              style="width: 200px; margin-right: 5px"
+            ></el-input>
+            <el-button size="small" @click="getData" type="primary"
+              >搜索</el-button
+            >
           </div>
         </div>
       </el-col>
@@ -27,7 +33,7 @@
       <el-table-column prop="video" label="视频"> </el-table-column>
       <el-table-column prop="videoCover" label="视频封面"> </el-table-column>
       <el-table-column prop="videoTitle" label="视频标题"> </el-table-column>
-      <el-table-column label="操作" fixed="right" width="150">
+      <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -42,8 +48,8 @@
             @click="handleDelete(scope.$index, scope.row)"
             >删除</el-button
           >
-          <el-button>推荐</el-button>
-          <el-buttom>取消推荐</el-buttom>
+          <el-button size="small" type="primary">推荐</el-button>
+          <el-button size="small" type="primary">取消推荐</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,11 +75,12 @@
         <el-form-item label="视频上传" prop="name" label-width="100px">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
             :on-remove="videoRemove"
-            auto-upload
-            :on-success="file"
+            action=""
+            :http-request="uploadFile"
+            :on-success="uploadSuccess"
             :before-remove="beforeRemove"
+            :limit="1"
             :file-list="fileList"
           >
             <el-button size="small" type="primary">点击上传</el-button>
@@ -85,8 +92,8 @@
             ref="pictures"
             action="#"
             list-type="picture-card"
-            limit="1"
-            :auto-upload="false"
+            :http-request="uploadimg"
+            :limit="1"
           >
             <i slot="default" class="el-icon-plus"></i>
             <div slot="file" slot-scope="{ file }">
@@ -118,10 +125,7 @@
           </el-dialog>
         </el-form-item>
         <el-form-item label="视频标题" label-width="100px">
-          <el-input
-            v-model="videoEdit.videoTitle"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="videoEdit.Titel" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -138,34 +142,15 @@
 export default {
   data() {
     return {
+      MemberId: localStorage.getItem("MemberId"),
+      Role: localStorage.getItem("Role"),
       fileList: [],
-      videos: [
-        {
-          video: "2016-05-02",
-          videoCover: "王小虎",
-          videoTitle: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          video: "2016-05-04",
-          videoCover: "王小虎",
-          videoTitle: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          video: "2016-05-01",
-          videoCover: "王小虎",
-          videoTitle: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          video: "2016-05-03",
-          videoCover: "王小虎",
-          videoTitle: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
+      videos: [],
       videoEdit: {
         id: "",
         video: "",
         videoCover: "",
-        videoTitle: "",
+        Titel: "",
       },
       userBackup: Object.assign({}, this.user),
       multipleSelection: [],
@@ -183,12 +168,41 @@ export default {
         total: 0,
       },
       search: "",
+      files: null,
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
+    uploadimg(e) {
+      var formdata = new FormData();
+      formdata.append("files", e.file);
+      this.http
+        .post("/Admin/Home/UploadImage", formdata)
+        .then((res) => {
+          if (res.data.Success) {
+            console.log(res);
+          }
+        })
+        .catch((res) => {
+          this.$message({
+            message: res.data.Message,
+            type: "error",
+          });
+        });
+    },
+    uploadFile(e) {
+      console.log(1111, e);
+      this.files = new FormData();
+      this.files.append(e.file);
+    },
+    uploadChange(e) {
+      console.log(e);
+    },
+    uploadSuccess(e) {
+      console.log(e);
+    },
     currentChange(e) {
       this.page.page = e;
       this.getData();
@@ -202,12 +216,27 @@ export default {
     getData() {
       this.loading = true;
       this.http
-        .get("/Admin/Home/GetVideo", { pageIndex: 1, pageSize: 20, search: "" })
+        .get(
+          "/Admin/Home/GetVideo?pageIndex=" +
+            this.page.page +
+            "&pageSize=" +
+            this.page.row +
+            "&search=" +
+            this.search +
+            "&MemberId=" +
+            this.MemberId +
+            "&Role=" +
+            this.Role
+        )
         .then((res) => {
-          console.log(res);
+          if (res.data.Success) {
+            this.videos = res.data.Data;
+          }
         })
         .catch((res) => {
-          console.log(res);
+          this.$message({
+            message: res.data.Message,
+          });
         });
     },
     handleEdit(index, row) {
@@ -332,6 +361,8 @@ export default {
 .tool-box {
   padding: 10px 10px;
   border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
 }
 .el-pagination {
   margin-top: 20px;

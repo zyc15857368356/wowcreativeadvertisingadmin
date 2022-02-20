@@ -10,9 +10,8 @@ axios.interceptors.request.use((config) => {
   let token = window.localStorage.getItem("accessToken")
   console.log("token:" + token);
   //下面两种方式都行
-  // config.headers.accessToken = token;
   config.headers['accessToken'] = token
-
+  config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
   return config;
 }, (error) => {
   console.log('错误的传参')
@@ -49,8 +48,8 @@ export function post(url, params) {
 export function get(url, param) {
   return new Promise((resolve, reject) => {
     axios.get(url, {
-        params: param
-      })
+      params: param
+    })
       .then(response => {
         resolve(response)
       }, err => {
