@@ -45,9 +45,13 @@
                 text-color="#fff"
                 active-text-color="#ffd04b"
               >
-                <el-menu-item index="1">
+                <el-menu-item index="1" @click="run(1)">
                   <i class="el-icon-menu"></i>
-                  <span slot="title">首页</span>
+                  <span slot="title">视频管理</span>
+                </el-menu-item>
+                <el-menu-item index="2" @click="run(2)">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">账号管理</span>
                 </el-menu-item>
               </el-menu>
             </div>
@@ -76,6 +80,17 @@ export default {
     };
   },
   methods: {
+    run(e) {
+      if (e === 1) {
+        this.$router.push({
+          path: "/home",
+        });
+      } else {
+        this.$router.push({
+          path: "/account",
+        });
+      }
+    },
     outLogin() {
       localStorage.clear();
       this.$router.push({
