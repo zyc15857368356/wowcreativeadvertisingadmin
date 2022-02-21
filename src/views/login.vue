@@ -4,21 +4,19 @@
     <div class="loginBox">
       <el-form :label-width="labelWidth">
         <el-form-item label="用户名">
-          <el-input
-            v-model="userName"
-            style="width: 200px"
-            size="mini"
-          ></el-input>
+          <el-input v-model="userName"
+                    style="width: 200px"
+                    size="mini"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input
-            v-model="passWord"
-            style="width: 200px"
-            size="mini"
-          ></el-input>
+          <el-input v-model="passWord"
+                    style="width: 200px"
+                    size="mini"></el-input>
         </el-form-item>
       </el-form>
-      <el-button size="mini" @click="login" type="primary">登录</el-button>
+      <el-button size="mini"
+                 @click="login"
+                 type="primary">登录</el-button>
     </div>
   </div>
 </template>
@@ -36,10 +34,11 @@ export default {
       if (this.userName && this.passWord) {
         this.http
           .post(
-            "/Auth/Login?username=" +
-              this.userName +
-              "&password=" +
-              this.passWord
+            "/Auth/Login",
+            {
+              username: this.userName,
+              password: this.passWord
+            }
           )
           .then((res) => {
             let MemberId = res.data.Data.MemberId;

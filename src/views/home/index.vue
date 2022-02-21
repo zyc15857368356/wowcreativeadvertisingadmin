@@ -3,136 +3,128 @@
     <el-row>
       <el-col :span="24">
         <div class="tool-box">
-          <el-button
-            type="primary"
-            icon="el-icon-circle-plus-outline"
-            size="small"
-            @click="handleAdd"
-            >新增</el-button
-          >
+          <el-button type="primary"
+                     icon="el-icon-circle-plus-outline"
+                     size="small"
+                     @click="handleAdd">新增</el-button>
           <div style="display: flex">
-            <el-input
-              v-model="search"
-              size="small"
-              style="width: 200px; margin-right: 5px"
-            ></el-input>
-            <el-button size="small" @click="getData" type="primary"
-              >搜索</el-button
-            >
+            <el-input v-model="search"
+                      size="small"
+                      style="width: 200px; margin-right: 5px"></el-input>
+            <el-button size="small"
+                       @click="getData"
+                       type="primary">搜索</el-button>
           </div>
         </div>
       </el-col>
     </el-row>
-    <el-table
-      :data="videos"
-      border
-      @selection-change="selectChange"
-      style="width: 100%"
-    >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="video" label="视频"> </el-table-column>
-      <el-table-column prop="videoCover" label="视频封面"> </el-table-column>
-      <el-table-column prop="videoTitle" label="视频标题"> </el-table-column>
-      <el-table-column label="操作" fixed="right" width="300">
+    <el-table :data="videos"
+              border
+              @selection-change="selectChange"
+              style="width: 100%">
+      <el-table-column type="selection"
+                       width="55"> </el-table-column>
+      <el-table-column prop="Path"
+                       label="视频"> </el-table-column>
+      <el-table-column prop="Cover"
+                       label="视频封面"> </el-table-column>
+      <el-table-column prop="Titel"
+                       label="视频标题"> </el-table-column>
+      <el-table-column label="操作"
+                       fixed="right"
+                       width="240">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            plain
-            @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button
-          >
-          <el-button size="small" type="primary">推荐</el-button>
-          <el-button size="small" type="primary">取消推荐</el-button>
+          <el-button size="mini"
+                     type="primary"
+                     plain
+                     @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini"
+                     type="danger"
+                     @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small"
+                     type="primary"
+                     v-if="!scope.row.Recomd"
+                     @click="recommendOrNot(scope.row)">推荐</el-button>
+          <el-button size="small"
+                     type="primary"
+                     @click="recommendOrNot(scope.row)"
+                     v-else>取消推荐</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: flex-end">
-      <el-pagination
-        :current-page="page.page"
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="page.row"
-        :size-change="sizeChange"
-        :current-change="currentChange"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-      >
+      <el-pagination :current-page="page.page"
+                     :page-sizes="[10, 20, 30, 50]"
+                     :page-size="page.row"
+                     :size-change="sizeChange"
+                     :current-change="currentChange"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="page.total">
       </el-pagination>
     </div>
-    <el-dialog
-      :title="dialogTitle"
-      width="600px"
-      :visible.sync="userFormVisible"
-      @close="resetForm('userForm')"
-    >
-      <el-form :model="videoEdit" ref="userForm">
-        <el-form-item label="视频上传" prop="name" label-width="100px">
-          <el-upload
-            class="upload-demo"
-            :on-remove="videoRemove"
-            action=""
-            :http-request="uploadFile"
-            :on-success="uploadSuccess"
-            :before-remove="beforeRemove"
-            :limit="1"
-            :file-list="fileList"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传视频文件</div>
+    <el-dialog :title="dialogTitle"
+               width="600px"
+               :visible.sync="userFormVisible"
+               @close="resetForm('userForm')">
+      <el-form :model="videoEdit"
+               ref="userForm">
+        <el-form-item label="视频上传"
+                      prop="path"
+                      label-width="100px">
+          <el-upload class="upload-demo"
+                     ref="videoUpload"
+                     :on-remove="videoRemove"
+                     action=""
+                     :http-request="uploadFile"
+                     :on-success="uploadSuccess"
+                     :before-remove="beforeRemove"
+                     :limit="1"
+                     :file-list="fileList">
+            <el-button size="small"
+                       type="primary">点击上传</el-button>
+            <div slot="tip"
+                 class="el-upload__tip">只能上传视频文件</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="封面上传" label-width="100px">
-          <el-upload
-            ref="pictures"
-            action="#"
-            list-type="picture-card"
-            :http-request="uploadimg"
-            :limit="1"
-          >
-            <i slot="default" class="el-icon-plus"></i>
-            <div slot="file" slot-scope="{ file }">
-              <img
-                class="el-upload-list__item-thumbnail"
-                :src="file.url"
-                alt=""
-              />
-              <span class="el-upload-list__item-actions">
-                <span
-                  class="el-upload-list__item-preview"
-                  @click="handlePictureCardPreview(file)"
-                >
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleRemove(file)"
-                >
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-            </div>
+        <el-form-item label="封面上传"
+                      label-width="100px">
+          <el-upload ref="pictures"
+                     action="#"
+                     class="avatar-uploader"
+                     list-type="picture-card"
+                     :http-request="uploadimg"
+                     :limit="1">
+            <img v-if="videoEdit.Cover"
+                 :src="fileUrl+videoEdit.Cover"
+                 class="avatar">
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%" :src="dialogImageUrl" alt="" />
+            <img width="100%"
+                 :src="dialogImageUrl"
+                 alt="" />
           </el-dialog>
         </el-form-item>
-        <el-form-item label="视频标题" label-width="100px">
-          <el-input v-model="videoEdit.Titel" autocomplete="off"></el-input>
+        <el-form-item label="视频标题"
+                      label-width="100px">
+          <el-input v-model="videoEdit.Titel"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="价格"
+                      label-width="100px">
+          <el-input v-model="videoEdit.Price"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="网址链接"
+                      label-width="100px">
+          <el-input v-model="videoEdit.Link"
+                    autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer"
+           class="dialog-footer">
         <el-button @click="userFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitUser('userForm')"
-          >确 定</el-button
-        >
+        <el-button type="primary"
+                   @click="submitUser()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -147,17 +139,17 @@ export default {
       fileList: [],
       videos: [],
       videoEdit: {
-        id: "",
-        video: "",
-        videoCover: "",
+        Cover: "",
         Titel: "",
+        Price: '',
+        path: '',
+        Link: ''
       },
       userBackup: Object.assign({}, this.user),
       multipleSelection: [],
       userFormVisible: false,
       dialogTitle: "",
       rowIndex: 9999,
-
       // 图片上传
       dialogImageUrl: "",
       dialogVisible: false,
@@ -169,12 +161,30 @@ export default {
       },
       search: "",
       files: null,
+      fileUrl: 'http://124.71.148.15:8004/Data/',
+      id: null
     };
   },
   mounted() {
     this.getData();
   },
   methods: {
+    recommendOrNot(e) {
+      this.http.post('/Admin/Home/RecomdVideo', { id: e.Id }).then(res => {
+        if (res.data.Success) {
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
+          this.getData()
+        } else {
+          this.$message({
+            message: res.data.Message,
+            type: 'error'
+          })
+        }
+      })
+    },
     uploadimg(e) {
       var formdata = new FormData();
       formdata.append("files", e.file);
@@ -182,7 +192,7 @@ export default {
         .post("/Admin/Home/UploadImage", formdata)
         .then((res) => {
           if (res.data.Success) {
-            console.log(res);
+            this.videoEdit.Cover = res.data.Data
           }
         })
         .catch((res) => {
@@ -193,9 +203,24 @@ export default {
         });
     },
     uploadFile(e) {
-      console.log(1111, e);
-      this.files = new FormData();
-      this.files.append(e.file);
+      var formdata = new FormData();
+      formdata.append("files", e.file);
+      this.http.post('/Admin/Home/UploadVideo', formdata).then(res => {
+        if (res.data.Success) {
+          this.fileList = []
+          this.fileList.push({
+            name: this.fileUrl + res.data.Data
+          })
+          this.videoEdit.path = res.data.Data
+        } else {
+          this.videoEdit.path = ''
+        }
+      }).catch(res => {
+        this.$message({
+          message: res.data.Message,
+          type: 'error'
+        })
+      })
     },
     uploadChange(e) {
       console.log(e);
@@ -211,22 +236,22 @@ export default {
       this.page.row = e;
       this.getData();
     },
-    beforeRemove() {},
-    videoRemove() {},
+    beforeRemove() { },
+    videoRemove() { },
     getData() {
       this.loading = true;
       this.http
         .get(
           "/Admin/Home/GetVideo?pageIndex=" +
-            this.page.page +
-            "&pageSize=" +
-            this.page.row +
-            "&search=" +
-            this.search +
-            "&MemberId=" +
-            this.MemberId +
-            "&Role=" +
-            this.Role
+          this.page.page +
+          "&pageSize=" +
+          this.page.row +
+          "&search=" +
+          this.search +
+          "&MemberId=" +
+          this.MemberId +
+          "&Role=" +
+          this.Role
         )
         .then((res) => {
           if (res.data.Success) {
@@ -241,64 +266,132 @@ export default {
     },
     handleEdit(index, row) {
       this.dialogTitle = "编辑";
-      this.videoEdit = Object.assign({}, row);
+      this.id = row.Id
+      this.videoEdit = {
+        Cover: row.Cover,
+        Titel: row.Titel,
+        Price: row.Price,
+        Path: row.Path,
+        Link: row.Link
+      }
+      console.log(this.videoEdit)
+      this.fileList.push({
+        name: this.fileUrl + row.Path
+      })
       this.userFormVisible = true;
-      this.rowIndex = index;
     },
-    submitUser(formName) {
-      // 表单验证
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let id = this.videoEdit.id;
-          if (id) {
-            // id非空-修改
-            this.videos.splice(this.rowIndex, 1, this.videoEdit);
-          } else {
-            // id为空-新增
-            this.videoEdit.id = this.videos.length + 1;
-            this.videos.unshift(this.videoEdit);
-          }
-          this.userFormVisible = false;
-          this.$message({
-            type: "success",
-            message: id ? "修改成功！" : "新增成功！",
-          });
+    submitUser() {
+      for (let key in this.videoEdit) {
+        if (!this.videoEdit[key]) {
+          return this.$message({
+            message: '请填写完整',
+            type: 'warning'
+          })
         }
-      });
+      }
+      var obj = {
+        Cover: this.videoEdit.Cover,
+        Titel: this.videoEdit.Titel,
+        Price: this.videoEdit.Price,
+        Path: this.videoEdit.path,
+        Link: this.videoEdit.Link
+      }
+      if (this.id) {
+        obj.id = this.id
+        this.http.post('/Admin/Home/EditVideo', obj).then(res => {
+          if (res.data.Success) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.videoEdit = {
+              Cover: "",
+              Titel: "",
+              Price: '',
+              path: ''
+            }
+            this.getData()
+            this.userFormVisible = false
+            obj = {}
+          } else {
+            this.$message({
+              message: res.data.Message,
+              type: 'error'
+            })
+          }
+        }).catch(res => {
+          this.$message({
+            message: res.data.Message,
+            type: 'error'
+          })
+        })
+      } else {
+        this.http.post('/Admin/Home/AddVideo', obj).then(res => {
+          if (res.data.Success) {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.videoEdit = {
+              Cover: "",
+              Titel: "",
+              Price: '',
+              path: ''
+            }
+            this.getData()
+            this.userFormVisible = false
+          } else {
+            this.$message({
+              message: res.data.Message,
+              type: 'error'
+            })
+          }
+        }).catch(res => {
+          this.$message({
+            message: res.data.Message,
+            type: 'error'
+          })
+        })
+      }
+
     },
     delVideo(e) {
-      return Promise((resolve, reject) => {
-        let ids = [e.id];
-        this.http
-          .post("/Admin/Home/DelVideo", {
-            ids: ids,
-          })
-          .then((res) => {
-            if (res.data.status) {
-              resolve();
-            }
-          })
-          .catch(() => {
-            reject();
-          });
-      });
+      let ids = [e];
+      console.log(2)
+      this.http
+        .post("/Admin/Home/DelVideo", ids)
+        .then((res) => {
+          if (res.data.Success) {
+            this.getData()
+          }
+        })
+        .catch((res) => {
+          console.log(res)
+        });
     },
     handleDelete(e, s) {
-      console.log(e);
       this.$confirm("确定删除该视频吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
-          this.delVideo(s.id);
+          console.log(12313131)
+          this.delVideo(s.Id);
         })
         .catch(() => {
           console.log("取消删除");
         });
     },
-    resetForm(formName) {
-      this.$refs[formName].clearValidate();
+    resetForm() {
+      this.fileList = []
+      this.videoEdit = {
+        Cover: '',
+        Titel: '',
+        Price: '',
+        Path: '',
+        Link: ''
+      }
     },
 
     mulDelete() {
@@ -335,13 +428,8 @@ export default {
       this.userFormVisible = true;
     },
 
-    handleRemove(file) {
-      let arr = this.$refs.pictures.uploadFiles;
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i].url == file.url) {
-          arr.splice(i, 1);
-        }
-      }
+    handleRemove() {
+      this.videoEdit.Cover = ''
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
@@ -389,6 +477,29 @@ export default {
 .avatar {
   width: 50px;
   height: 50px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
   display: block;
 }
 </style>
