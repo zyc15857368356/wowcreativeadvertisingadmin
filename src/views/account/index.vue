@@ -15,7 +15,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="Tel" label="电话"> </el-table-column>
-      <el-table-column prop="Portrait" label="头像"> </el-table-column>
+      <el-table-column prop="Portrait" label="头像">
+        <template slot-scope="scope">
+          <img
+            :src="scope.row.Portrait"
+            style="width: 30px; height: 30px"
+            alt=""
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="操作" fixed="right" width="240">
         <template slot-scope="scope">
           <el-button
@@ -101,11 +109,7 @@
             :http-request="uploadimg"
             :limit="1"
           >
-            <img
-              v-if="form.Portrait"
-              :src="fileUrl + form.Portrait"
-              class="avatar"
-            />
+            <img v-if="form.Portrait" :src="form.Portrait" class="avatar" />
           </el-upload>
         </el-form-item>
       </el-form>
@@ -193,7 +197,8 @@ export default {
       },
       search: "",
       files: null,
-      fileUrl: "http://124.71.148.15:8004/Data/",
+      imgUrl: "https://www.epoia.cn/Image/",
+      fileUrl: "https://www.epoia.cn/Data/",
       id: null,
     };
   },

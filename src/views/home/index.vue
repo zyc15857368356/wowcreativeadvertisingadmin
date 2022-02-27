@@ -30,8 +30,15 @@
       style="width: 100%"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="Path" label="视频"> </el-table-column>
-      <el-table-column prop="Cover" label="视频封面"> </el-table-column>
+      <el-table-column prop="Path" label="视频"></el-table-column>
+      <el-table-column label="视频封面">
+        <template slot-scope="scope">
+          <img
+            :src="imgUrl + scope.row.Cover"
+            style="width: 30px; height: 30px"
+          />
+        </template>
+      </el-table-column>
       <el-table-column prop="Titel" label="视频标题"> </el-table-column>
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
@@ -117,7 +124,8 @@
           >
             <img
               v-if="videoEdit.Cover"
-              :src="fileUrl + videoEdit.Cover"
+              :src="imgUrl + videoEdit.Cover"
+              style="width: 100%; height: 100%"
               class="avatar"
             />
           </el-upload>
@@ -127,6 +135,21 @@
         </el-form-item>
         <el-form-item label="视频标题" label-width="100px">
           <el-input v-model="videoEdit.Titel" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="视频分类" label-width="100px">
+          <el-select
+            v-model="videoEdit.Type"
+            placeholder="请选择"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in type"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="价格" label-width="100px">
           <el-input v-model="videoEdit.Price" autocomplete="off"></el-input>
@@ -187,12 +210,27 @@ export default {
       Role: localStorage.getItem("Role"),
       fileList: [],
       videos: [],
+      type: [
+        {
+          label: "科技",
+          value: 0,
+        },
+        {
+          label: "服饰",
+          value: 1,
+        },
+        {
+          label: "美食",
+          value: 2,
+        },
+      ],
       videoEdit: {
         Cover: "",
         Titel: "",
         Price: "",
         path: "",
         Link: "",
+        Type: 0,
       },
       collectionobj: [],
       shareobj: [],
@@ -213,7 +251,8 @@ export default {
       },
       search: "",
       files: null,
-      fileUrl: "http://124.71.148.15:8004/Data/",
+      imgUrl: "https://www.epoia.cn/Image/",
+      fileUrl: "https://www.epoia.cn/Data/",
       id: null,
     };
   },
@@ -229,6 +268,7 @@ export default {
       this.shareobj = [];
       this.thumobj = [];
       this.detailVisible = false;
+      this.$refs.pictures.clearFiles();
     },
     detailClose() {
       this.activeName = "first";
@@ -359,6 +399,7 @@ export default {
         Price: row.Price,
         Path: row.Path,
         Link: row.Link,
+        Type: row.Type,
       };
       console.log(this.videoEdit);
       this.fileList.push({
@@ -368,19 +409,22 @@ export default {
     },
     submitUser() {
       for (let key in this.videoEdit) {
-        if (!this.videoEdit[key]) {
+        if (!this.videoEdit[key] && key !== "Type") {
+          console.log(key);
           return this.$message({
             message: "请填写完整",
             type: "warning",
           });
         }
       }
+      console.log(this.videoEdit.Type);
       var obj = {
         Cover: this.videoEdit.Cover,
         Titel: this.videoEdit.Titel,
         Price: this.videoEdit.Price,
         Path: this.videoEdit.path,
         Link: this.videoEdit.Link,
+        Type: this.videoEdit.Type,
       };
       if (this.id) {
         obj.id = this.id;

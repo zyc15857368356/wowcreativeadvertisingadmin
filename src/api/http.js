@@ -4,7 +4,7 @@ import {
   serialize
 } from '@/util/util'
 axios.defaults.timeout = 5000; //响应时间
-axios.defaults.baseURL = 'http://124.71.148.15:8004'; //配置接口地址
+axios.defaults.baseURL = 'https://www.epoia.cn'; //配置接口地址
 axios.defaults.withCredentials = true
 //POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
@@ -62,8 +62,8 @@ export function post(url, params) {
 export function get(url, param) {
   return new Promise((resolve, reject) => {
     axios.get(url, {
-        params: param
-      })
+      params: param
+    })
       .then(response => {
         resolve(response)
       }, err => {
