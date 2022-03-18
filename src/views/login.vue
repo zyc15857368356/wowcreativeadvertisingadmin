@@ -4,19 +4,21 @@
     <div class="loginBox">
       <el-form :label-width="labelWidth">
         <el-form-item label="用户名">
-          <el-input v-model="userName"
-                    style="width: 200px"
-                    size="mini"></el-input>
+          <el-input
+            v-model="userName"
+            style="width: 200px"
+            size="mini"
+          ></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="passWord"
-                    style="width: 200px"
-                    size="mini"></el-input>
+          <el-input
+            v-model="passWord"
+            style="width: 200px"
+            size="mini"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <el-button size="mini"
-                 @click="login"
-                 type="primary">登录</el-button>
+      <el-button size="mini" @click="login" type="primary">登录</el-button>
     </div>
   </div>
 </template>
@@ -33,27 +35,35 @@ export default {
     login() {
       if (this.userName && this.passWord) {
         this.http
-          .post(
-            "/Auth/Login",
-            {
-              username: this.userName,
-              password: this.passWord
-            }
-          )
+          .post("/Auth/Login", {
+            username: this.userName,
+            password: this.passWord,
+          })
           .then((res) => {
-            let MemberId = res.data.Data.MemberId;
-            let Role = res.data.Data.Role === "管理员" ? 1 : 0;
-            localStorage.setItem("MemberId", MemberId);
-            localStorage.setItem("Role", Role);
-            if (res.status) {
-              this.$router.push({
-                path: "/home",
+            if (res.data.Success) {
+              let MemberId = res.data.Data.MemberId;
+              let Role = res.data.Data.Role === "管理员" ? 1 : 0;
+              if (MemberId) {
+                localStorage.setItem("MemberId", MemberId);
+              }
+              if (Role) {
+                localStorage.setItem("Role", Role);
+              }
+              if (res.status) {
+                this.$router.push({
+                  path: "/home",
+                });
+              }
+            } else {
+              this.$message({
+                message: res.data.Message,
+                type: "error",
               });
             }
           })
           .catch((res) => {
             this.$message({
-              message: res.msg,
+              message: res.data.Message,
               type: "error",
             });
           });

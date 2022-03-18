@@ -3,201 +3,217 @@
     <el-row>
       <el-col :span="24">
         <div class="tool-box">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus-outline"
-                     size="small"
-                     @click="handleAdd">新增</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-circle-plus-outline"
+            size="small"
+            @click="handleAdd"
+            >新增</el-button
+          >
           <div style="display: flex">
-            <el-input v-model="search"
-                      size="small"
-                      style="width: 200px; margin-right: 5px"></el-input>
-            <el-button size="small"
-                       @click="getData"
-                       type="primary">搜索</el-button>
+            <el-input
+              v-model="search"
+              size="small"
+              style="width: 200px; margin-right: 5px"
+            ></el-input>
+            <el-button size="small" @click="getData" type="primary"
+              >搜索</el-button
+            >
           </div>
         </div>
       </el-col>
     </el-row>
-    <el-table :data="videos"
-              border
-              @selection-change="selectChange"
-              style="width: 100%">
-      <el-table-column type="selection"
-                       width="55"> </el-table-column>
-      <el-table-column prop="Path"
-                       label="视频"> </el-table-column>
-      <el-table-column prop="Cover"
-                       label="视频封面">
+    <el-table
+      :data="videos"
+      border
+      @selection-change="selectChange"
+      style="width: 100%"
+    >
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="Path" label="视频"> </el-table-column>
+      <el-table-column prop="Cover" label="视频封面">
         <template slot-scope="scope">
-          <img :src="imgUrl+scope.row.Cover"
-               style="width: 60px"
-               alt="">
+          <img :src="imgUrl + scope.row.Cover" style="width: 60px" alt="" />
         </template>
       </el-table-column>
-      <el-table-column prop="Titel"
-                       label="视频标题"> </el-table-column>
-      <el-table-column label="操作"
-                       fixed="right"
-                       width="300">
+      <el-table-column prop="Titel" label="视频标题"> </el-table-column>
+      <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="primary"
-                     plain
-                     @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini"
-                     type="danger"
-                     @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          <el-button size="mini"
-                     type="primary"
-                     @click="viewDetail(scope.$index, scope.row)">详情</el-button>
-          <el-button size="small"
-                     type="primary"
-                     v-if="!scope.row.Recomd"
-                     @click="recommendOrNot(scope.row)">推荐</el-button>
-          <el-button size="small"
-                     type="primary"
-                     @click="recommendOrNot(scope.row)"
-                     v-else>取消推荐</el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            plain
+            @click="handleEdit(scope.$index, scope.row)"
+            >编辑</el-button
+          >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            >删除</el-button
+          >
+          <el-button
+            size="mini"
+            type="primary"
+            @click="viewDetail(scope.$index, scope.row)"
+            >详情</el-button
+          >
+          <el-button
+            size="small"
+            type="primary"
+            v-if="!scope.row.Recomd"
+            @click="recommendOrNot(scope.row)"
+            >推荐</el-button
+          >
+          <el-button
+            size="small"
+            type="primary"
+            @click="recommendOrNot(scope.row)"
+            v-else
+            >取消推荐</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
     <div style="display: flex; justify-content: flex-end">
-      <el-pagination :current-page="page.page"
-                     :page-sizes="[10, 20]"
-                     :page-size="page.row"
-                     @size-change="sizeChange"
-                     @current-change="currentChange"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="page.total">
+      <el-pagination
+        :current-page="page.page"
+        :page-sizes="[10, 20]"
+        :page-size="page.row"
+        @size-change="sizeChange"
+        @current-change="currentChange"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+      >
       </el-pagination>
     </div>
-    <el-dialog :title="dialogTitle"
-               width="600px"
-               :visible.sync="userFormVisible"
-               @close="resetForm('userForm')">
-      <el-form :model="videoEdit"
-               ref="userForm">
-        <el-form-item label="视频上传"
-                      prop="path"
-                      label-width="100px">
-          <el-upload class="upload-demo"
-                     ref="videoUpload"
-                     :on-remove="videoRemove"
-                     action=""
-                     :http-request="uploadFile"
-                     :on-preview="download"
-                     :on-success="uploadSuccess"
-                     :before-remove="beforeRemove"
-                     :limit="1"
-                     :file-list="fileList">
-            <el-button size="small"
-                       type="primary">点击上传</el-button>
-            <div slot="tip"
-                 class="el-upload__tip">只能上传视频文件</div>
+    <el-dialog
+      :title="dialogTitle"
+      width="600px"
+      :visible.sync="userFormVisible"
+      @close="resetForm('userForm')"
+    >
+      <el-form :model="videoEdit" ref="userForm">
+        <el-form-item label="视频上传" prop="path" label-width="100px">
+          <el-upload
+            class="upload-demo"
+            ref="videoUpload"
+            :on-remove="videoRemove"
+            action=""
+            :http-request="uploadFile"
+            :on-preview="download"
+            :on-success="uploadSuccess"
+            :before-remove="beforeRemove"
+            :limit="1"
+            :file-list="fileList"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传视频文件</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="封面上传"
-                      label-width="100px">
-          <el-upload ref="pictures"
-                     action="#"
-                     class="avatar-uploader"
-                     list-type="picture-card"
-                     :http-request="uploadimg"
-                     :limit="1">
-            <img v-if="videoEdit.Cover"
-                 :src="imgUrl + videoEdit.Cover"
-                 style="width: 100%; height: 100%"
-                 class="avatar" />
+        <el-form-item label="封面上传" label-width="100px">
+          <el-upload
+            ref="pictures"
+            action="#"
+            class="avatar-uploader"
+            list-type="picture-card"
+            :http-request="uploadimg"
+            :limit="1"
+          >
+            <img
+              v-if="videoEdit.Cover"
+              :src="imgUrl + videoEdit.Cover"
+              style="width: 100%; height: 100%"
+              class="avatar"
+            />
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
-            <img width="100%"
-                 :src="dialogImageUrl"
-                 alt="" />
+            <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
         </el-form-item>
-        <el-form-item label="视频标题"
-                      label-width="100px">
-          <el-input v-model="videoEdit.Titel"
-                    autocomplete="off"></el-input>
+        <el-form-item label="视频标题" label-width="100px">
+          <el-input v-model="videoEdit.Titel" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="视频分类"
-                      label-width="100px">
-          <el-select v-model="videoEdit.Type"
-                     placeholder="请选择"
-                     style="width: 100%">
-            <el-option v-for="item in type"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
+        <el-form-item label="视频分类" label-width="100px">
+          <el-select
+            v-model="videoEdit.Type"
+            placeholder="请选择"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in type"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="价格"
-                      label-width="100px">
-          <el-input v-model="videoEdit.Price"
-                    autocomplete="off"></el-input>
+        <el-form-item label="价格" label-width="100px">
+          <el-input v-model="videoEdit.Price" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="网址链接"
-                      label-width="100px">
-          <el-input v-model="videoEdit.Link"
-                    autocomplete="off"></el-input>
+        <el-form-item label="网址链接" label-width="100px">
+          <el-input v-model="videoEdit.Link" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="点赞数" label-width="100px">
+          <el-input
+            v-model="videoEdit.Thumbcou"
+            type="number"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="收藏数" label-width="100px">
+          <el-input
+            v-model="videoEdit.Collectioncou"
+            type="number"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="加入购物车数" label-width="100px">
+          <el-input
+            v-model="videoEdit.Shopcou"
+            type="number"
+            autocomplete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="userFormVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="submitUser()">确 定</el-button>
+        <el-button type="primary" @click="submitUser()">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="详情"
-               width="800px"
-               :visible.sync="detailVisible"
-               :before-close="detailClose"
-               :show-close="false">
-      <el-tabs v-model="activeName"
-               @tab-click="handleClick">
-        <el-tab-pane label="收藏"
-                     name="first">
-          <el-table :data="collectionobj"
-                    style="width: 100%">
-            <el-table-column prop="UserName"
-                             label="用户名"> </el-table-column>
-            <el-table-column prop="Tel"
-                             label="手机号"> </el-table-column>
-            <el-table-column prop="Emile"
-                             label="邮箱"> </el-table-column>
+    <el-dialog
+      title="详情"
+      width="800px"
+      :visible.sync="detailVisible"
+      :before-close="detailClose"
+      :show-close="false"
+    >
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="收藏" name="first">
+          <el-table :data="collectionobj" style="width: 100%">
+            <el-table-column prop="UserName" label="用户名"> </el-table-column>
+            <el-table-column prop="Tel" label="手机号"> </el-table-column>
+            <el-table-column prop="Emile" label="邮箱"> </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="分享"
-                     name="second">
-          <el-table :data="shareobj"
-                    style="width: 100%">
-            <el-table-column prop="UserName"
-                             label="用户名"> </el-table-column>
-            <el-table-column prop="Tel"
-                             label="手机号"> </el-table-column>
-            <el-table-column prop="Emile"
-                             label="邮箱"> </el-table-column>
+        <el-tab-pane label="分享" name="second">
+          <el-table :data="shareobj" style="width: 100%">
+            <el-table-column prop="UserName" label="用户名"> </el-table-column>
+            <el-table-column prop="Tel" label="手机号"> </el-table-column>
+            <el-table-column prop="Emile" label="邮箱"> </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="点赞"
-                     name="third">
-          <el-table :data="thumobj"
-                    style="width: 100%">
-            <el-table-column prop="UserName"
-                             label="用户名"> </el-table-column>
-            <el-table-column prop="Tel"
-                             label="手机号"> </el-table-column>
-            <el-table-column prop="Emile"
-                             label="邮箱"> </el-table-column>
+        <el-tab-pane label="点赞" name="third">
+          <el-table :data="thumobj" style="width: 100%">
+            <el-table-column prop="UserName" label="用户名"> </el-table-column>
+            <el-table-column prop="Tel" label="手机号"> </el-table-column>
+            <el-table-column prop="Emile" label="邮箱"> </el-table-column>
           </el-table>
         </el-tab-pane>
       </el-tabs>
       <div slot="footer">
-        <el-button size="mini"
-                   @click="close"
-                   type="primary">关 闭</el-button>
+        <el-button size="mini" @click="close" type="primary">关 闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -234,6 +250,9 @@ export default {
         path: "",
         Link: "",
         Type: 0,
+        Thumbcou: 0,
+        Collectioncou: 0,
+        Shopcou: 0,
       },
       collectionobj: [],
       shareobj: [],
@@ -256,6 +275,7 @@ export default {
       files: null,
       imgUrl: "https://www.epoia.cn/Image/",
       fileUrl: "https://www.epoia.cn/Data/",
+      videoUrl: "https://www.epoia.cn/Video/",
       id: null,
     };
   },
@@ -263,8 +283,9 @@ export default {
     this.getData();
   },
   methods: {
-    download(e) {
-      window.open(e.name)
+    download() {
+      console.log(this.videoEdit);
+      window.open(this.videoUrl + this.videoEdit.Path);
     },
     handleClick() {
       console.log(this.thumobj);
@@ -368,27 +389,27 @@ export default {
       this.page.row = e;
       this.getData();
     },
-    beforeRemove() { },
-    videoRemove() { },
+    beforeRemove() {},
+    videoRemove() {},
     getData() {
       this.loading = true;
       this.http
         .get(
           "/Admin/Home/GetVideo?pageIndex=" +
-          this.page.page +
-          "&pageSize=" +
-          this.page.row +
-          "&search=" +
-          this.search +
-          "&MemberId=" +
-          this.MemberId +
-          "&Role=" +
-          this.Role
+            this.page.page +
+            "&pageSize=" +
+            this.page.row +
+            "&search=" +
+            this.search +
+            "&MemberId=" +
+            this.MemberId +
+            "&Role=" +
+            this.Role
         )
         .then((res) => {
           if (res.data.Success) {
             this.videos = res.data.Data;
-            this.page.total = res.data.Data.length
+            this.page.total = res.data.Data.length;
           }
         })
         .catch((res) => {
@@ -407,6 +428,9 @@ export default {
         Path: row.Path,
         Link: row.Link,
         Type: row.Type,
+        Thumbcou: row.Thumbcou,
+        Collectioncou: row.Collectioncou,
+        Shopcou: row.Shopcou,
       };
       this.fileList.push({
         name: this.videoUrl + row.Path,
@@ -415,15 +439,19 @@ export default {
     },
     submitUser() {
       for (let key in this.videoEdit) {
-        if (!this.videoEdit[key] && key !== "Type") {
-          console.log(key);
+        if (
+          !this.videoEdit[key] &&
+          key !== "Type" &&
+          key !== "Thumbcou" &&
+          key !== "Collectioncou" &&
+          key !== "Shopcou"
+        ) {
           return this.$message({
             message: "请填写完整",
             type: "warning",
           });
         }
       }
-      console.log(this.videoEdit.Type);
       var obj = {
         Cover: this.videoEdit.Cover,
         Titel: this.videoEdit.Titel,
@@ -431,6 +459,9 @@ export default {
         Path: this.videoEdit.path,
         Link: this.videoEdit.Link,
         Type: this.videoEdit.Type,
+        Thumbcou: this.videoEdit.Thumbcou,
+        Collectioncou: this.videoEdit.Collectioncou,
+        Shopcou: this.videoEdit.Shopcou,
       };
       if (this.id) {
         obj.id = this.id;
@@ -498,7 +529,6 @@ export default {
     },
     delVideo(e) {
       let ids = [e];
-      console.log(2);
       this.http
         .post("/Admin/Home/DelVideo", ids)
         .then((res) => {
@@ -517,7 +547,6 @@ export default {
         type: "warning",
       })
         .then(() => {
-          console.log(12313131);
           this.delVideo(s.Id);
         })
         .catch(() => {
