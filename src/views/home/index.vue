@@ -16,8 +16,8 @@
               size="small"
               style="width: 200px; margin-right: 5px"
             ></el-input>
-            <el-button size="small" @click="getData" type="primary"
-              >搜索</el-button
+            <el-button size="small" @click="getList" type="primary"
+              >搜 索</el-button
             >
           </div>
         </div>
@@ -27,6 +27,7 @@
       :data="videos"
       border
       @selection-change="selectChange"
+      max-height="750px"
       style="width: 100%"
     >
       <el-table-column type="selection" width="55"> </el-table-column>
@@ -37,6 +38,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="Titel" label="视频标题"> </el-table-column>
+      <el-table-column prop="Name" label="视频分类"> </el-table-column>
       <el-table-column label="操作" fixed="right" width="300">
         <template slot-scope="scope">
           <el-button
@@ -136,15 +138,15 @@
         </el-form-item>
         <el-form-item label="视频分类" label-width="100px">
           <el-select
-            v-model="videoEdit.Type"
+            v-model="videoEdit.VideoTypeId"
             placeholder="请选择"
             style="width: 100%"
           >
             <el-option
-              v-for="item in type"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in typeList"
+              :key="item.Id"
+              :label="item.Name"
+              :value="item.Id"
             >
             </el-option>
           </el-select>
@@ -253,6 +255,8 @@ export default {
         Thumbcou: 0,
         Collectioncou: 0,
         Shopcou: 0,
+        height: 0,
+        width: 0,
       },
       collectionobj: [],
       shareobj: [],
@@ -277,6 +281,7 @@ export default {
       fileUrl: "https://www.epoia.cn/Data/",
       videoUrl: "https://www.epoia.cn/Video/",
       id: null,
+      typeList: [],
     };
   },
   mounted() {
@@ -353,6 +358,7 @@ export default {
         });
     },
     uploadFile(e) {
+      console.log(111);
       var formdata = new FormData();
       formdata.append("files", e.file);
       this.http
@@ -361,9 +367,11 @@ export default {
           if (res.data.Success) {
             this.fileList = [];
             this.fileList.push({
-              name: this.videoUrl + res.data.Data,
+              name: this.videoUrl + res.data.Data.filename,
             });
-            this.videoEdit.path = res.data.Data;
+            this.videoEdit.path = res.data.Data.filename;
+            this.videoEdit.width = res.data.Data.width;
+            this.videoEdit.height = res.data.Data.height;
           } else {
             this.videoEdit.path = "";
           }
@@ -409,6 +417,7 @@ export default {
         .then((res) => {
           if (res.data.Success) {
             this.videos = res.data.Data;
+            this.typeList = res.data.Data1;
             this.page.total = res.data.Data.length;
           }
         })
@@ -427,7 +436,7 @@ export default {
         Price: row.Price,
         Path: row.Path,
         Link: row.Link,
-        Type: row.Type,
+        VideoTypeId: row.VideoTypeId,
         Thumbcou: row.Thumbcou,
         Collectioncou: row.Collectioncou,
         Shopcou: row.Shopcou,
@@ -444,7 +453,9 @@ export default {
           key !== "Type" &&
           key !== "Thumbcou" &&
           key !== "Collectioncou" &&
-          key !== "Shopcou"
+          key !== "Shopcou" &&
+          key !== "width" &&
+          key !== "height"
         ) {
           return this.$message({
             message: "请填写完整",
@@ -458,10 +469,12 @@ export default {
         Price: this.videoEdit.Price,
         Path: this.videoEdit.path,
         Link: this.videoEdit.Link,
-        Type: this.videoEdit.Type,
+        VideoTypeId: this.videoEdit.VideoTypeId,
         Thumbcou: this.videoEdit.Thumbcou,
         Collectioncou: this.videoEdit.Collectioncou,
         Shopcou: this.videoEdit.Shopcou,
+        Width: this.videoEdit.width,
+        Height: this.videoEdit.height,
       };
       if (this.id) {
         obj.id = this.id;
@@ -478,6 +491,9 @@ export default {
                 Titel: "",
                 Price: "",
                 path: "",
+                Width: 0,
+                Height: 0,
+                VideoTypeId: "",
               };
               this.getData();
               this.userFormVisible = false;
@@ -509,6 +525,9 @@ export default {
                 Titel: "",
                 Price: "",
                 path: "",
+                Width: 0,
+                Height: 0,
+                VideoTypeId: "",
               };
               this.getData();
               this.userFormVisible = false;

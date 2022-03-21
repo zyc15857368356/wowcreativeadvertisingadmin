@@ -5,24 +5,28 @@
         <el-col :span="24">
           <div class="navhead navbackground">
             <div class="user-wrapper">
-              <div class="demo-basic--circle"
-                   style="display: table">
-                <div class="block"
-                     style="display: table-cell; vertical-align: middle">
-                  <el-avatar :size="40"
-                             :src="circleUrl"></el-avatar>
+              <div class="demo-basic--circle" style="display: table">
+                <div
+                  class="block"
+                  style="display: table-cell; vertical-align: middle"
+                >
+                  <el-avatar :size="40" :src="circleUrl"></el-avatar>
                 </div>
               </div>
               <div class="user-main">
-                <el-menu :default-active="activeIndex"
-                         class="el-menu-demo"
-                         mode="horizontal"
-                         @select="handleSelect">
+                <el-menu
+                  :default-active="activeIndex"
+                  class="el-menu-demo"
+                  mode="horizontal"
+                  @select="handleSelect"
+                >
                   <el-submenu index="1">
-                    <template slot="title"
-                              style="color: #fff!important">admin</template>
-                    <el-menu-item index="1-1"
-                                  @click="outLogin">退出登录</el-menu-item>
+                    <template slot="title" style="color: #fff !important"
+                      >admin</template
+                    >
+                    <el-menu-item index="1-1" @click="outLogin"
+                      >退出登录</el-menu-item
+                    >
                   </el-submenu>
                 </el-menu>
               </div>
@@ -34,22 +38,26 @@
         <el-col :span="3">
           <div class="sidebar">
             <div class="main-side">
-              <el-menu default-active="1"
-                       class="el-menu-vertical-demo"
-                       @open="handleOpen"
-                       @close="handleClose"
-                       background-color="#409EFF"
-                       text-color="#fff"
-                       active-text-color="#ffd04b">
-                <el-menu-item index="1"
-                              @click="run(1)">
+              <el-menu
+                default-active="1"
+                class="el-menu-vertical-demo"
+                @open="handleOpen"
+                @close="handleClose"
+                background-color="#409EFF"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+              >
+                <el-menu-item index="1" @click="run(1)">
                   <i class="el-icon-menu"></i>
                   <span slot="title">视频管理</span>
                 </el-menu-item>
-                <el-menu-item index="2"
-                              @click="run(2)">
+                <el-menu-item index="2" @click="run(2)">
                   <i class="el-icon-menu"></i>
                   <span slot="title">账号管理</span>
+                </el-menu-item>
+                <el-menu-item index="3" @click="run(3)">
+                  <i class="el-icon-menu"></i>
+                  <span slot="title">视频类型管理</span>
                 </el-menu-item>
               </el-menu>
             </div>
@@ -83,9 +91,13 @@ export default {
         this.$router.push({
           path: "/home",
         });
-      } else {
+      } else if (e === 2) {
         this.$router.push({
           path: "/account",
+        });
+      } else {
+        this.$router.push({
+          path: "/typeManager",
         });
       }
     },
